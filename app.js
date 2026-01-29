@@ -129,5 +129,25 @@ async function renderSavedFromDB() {
     });
   };
 }
+async function loadFromDB(keyword) {
+  const database = await openDB();
+  const tx = database.transaction(STORE_NAME, "readonly");
+  const store = tx.objectStore(STORE_NAME);
+
+  const request = store.get(keyword);
+
+  request.onsuccess = () => {
+    const data = request.result;
+    if (!data) return;
+
+    termTitle.textContent = data.keyword;
+    shortDef.textContent = data.shortDef;
+    longDef.textContent = data.longDef;
+    example.textContent = data.example;
+
+    termView.classList.remove("hidden");
+  };
+}
+
 
 
