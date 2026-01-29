@@ -92,15 +92,21 @@ searchBtn.addEventListener("click", async () => {
   const term = input.value.trim();
   if (!term) return;
 
+  if (!navigator.onLine) {
+    alert("Offline módban csak mentett fogalmak érhetők el.");
+    return;
+  }
+
   const data = await fetchTerm(term, "beginner");
 
-  termTitle.textContent = data.title;
+  termTitle.textContent = term;
   shortDef.textContent = data.short;
   longDef.textContent = data.long;
   example.textContent = data.example;
 
   termView.classList.remove("hidden");
 });
+
 
 // MENTETT FOGALMAK (LOCALSTORAGE – MVP)
 document.getElementById("saveBtn").addEventListener("click", async () => {
@@ -173,6 +179,7 @@ async function loadFromDB(keyword) {
 document.addEventListener("DOMContentLoaded", () => {
   openDB().then(renderSavedFromDB);
 });
+
 
 
 
