@@ -148,6 +148,10 @@ async function loadFromDB(keyword) {
     termView.classList.remove("hidden");
   };
 }
+document.addEventListener("DOMContentLoaded", () => {
+  openDB().then(renderSavedFromDB);
+});
+
 
 
 
