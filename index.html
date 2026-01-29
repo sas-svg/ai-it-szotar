@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+  <meta charset="UTF-8" />
+  <title>AI IT Szótár</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- PWA alap -->
+  <meta name="theme-color" content="#121212">
+
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header class="header">
+  <h1>AI IT Szótár</h1>
+  <span id="status" class="status online">● Online</span>
+</header>
+
+<main class="container">
+
+  <!-- Keresés -->
+  <section class="search">
+    <input 
+      type="text" 
+      id="searchInput" 
+      placeholder="Keress IT fogalomra… (pl. API)"
+    />
+    <button id="searchBtn">Keresés</button>
+  </section>
+
+  <!-- Fogalom részletek -->
+  <section id="termView" class="card hidden">
+
+    <div class="term-header">
+      <h2 id="termTitle"></h2>
+      <button id="saveBtn">⭐ Mentés</button>
+    </div>
+
+    <div class="level-switch">
+      <button data-level="beginner">Kezdő</button>
+      <button data-level="intermediate">Haladó</button>
+      <button data-level="advanced">Szakmai</button>
+    </div>
+
+    <p id="shortDef"></p>
+
+    <details>
+      <summary>Részletes magyarázat</summary>
+      <p id="longDef"></p>
+    </details>
+
+    <div class="example">
+      <strong>Példa:</strong>
+      <p id="example"></p>
+    </div>
+
+  </section>
+
+  <!-- Saját szótár -->
+  <section class="saved">
+    <h3>Mentett fogalmak</h3>
+    <ul id="savedList"></ul>
+  </section>
+
+</main>
+
+<script src="app.js"></script>
+</body>
+</html>
