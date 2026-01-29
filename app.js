@@ -57,13 +57,35 @@ updateStatus();
 
 // IDEIGLENES AI HELYŐRZŐ
 async function fetchTerm(term, level) {
-  return {
-    title: term,
-    short: "Ez egy ideiglenes AI magyarázat.",
-    long: "Itt lesz a részletes AI által generált magyarázat.",
-    example: "Példa használatra."
-  };
+  const response = await fetch("https://api.openai.com/v1/chat/completions", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": "Bearer YOUR_API_KEY_HERE"
+    },
+    body: JSON.stringify({
+      model: "gpt-4o-mini",
+      messages: [
+        {
+          role: "system",
+          content: `Te egy informatikai szótár vagy. 
+          Válaszolj JSON formátumban:
+          short, long, example.
+          Magyarázati szint: ${level}`
+        },
+        {
+          role: "user",
+          content: term
+        }
+      ],
+      temperature: 0.3
+    })
+  });
+
+  const data = await response.json();
+  return JSON.parse(data.choices[0].message.content);
 }
+
 
 // KERESÉS
 searchBtn.addEventListener("click", async () => {
@@ -151,6 +173,7 @@ async function loadFromDB(keyword) {
 document.addEventListener("DOMContentLoaded", () => {
   openDB().then(renderSavedFromDB);
 });
+
 
 
 
