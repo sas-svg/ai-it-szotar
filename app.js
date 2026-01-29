@@ -81,16 +81,24 @@ searchBtn.addEventListener("click", async () => {
 });
 
 // MENTETT FOGALMAK (LOCALSTORAGE – MVP)
-document.getElementById("saveBtn").addEventListener("click", () => {
-  const term = termTitle.textContent;
-  if (!term) return;
+document.getElementById("saveBtn").addEventListener("click", async () => {
+  if (!termTitle.textContent) return;
 
-  let saved = JSON.parse(localStorage.getItem("savedTerms") || "[]");
-  if (!saved.includes(term)) {
-    saved.push(term);
-    localStorage.setItem("savedTerms", JSON.stringify(saved));
-    renderSaved();
-  }
+  const termData = {
+    keyword: termTitle.textContent,
+    shortDef: shortDef.textContent,
+    longDef: longDef.textContent,
+    example: example.textContent,
+    savedAt: new Date().toISOString()
+  };
+
+  const database = await openDB();
+  const tx = database.transaction(STORE_NAME, "readwrite");
+  const store = tx.objectStore(STORE_NAME);
+
+  store.put(termData);
+
+  tx.oncomplete = renderSavedFromDB;
 });
 
 function renderSaved() {
@@ -103,4 +111,23 @@ function renderSaved() {
   });
 }
 renderSaved();
+async function renderSavedFromDB() {
+  const database = await openDB();
+  const tx = database.transaction(STORE_NAME, "readonly");
+  const store = tx.objectStore(STORE_NAME);
+
+  const request = store.getAll();
+
+  request.onsuccess = () => {
+    savedList.innerHTML = "";
+
+    request.result.forEach(item => {
+      const li = document.createElement("li");
+      li.textContent = item.keyword;
+      li.onclick = () => loadFromDB(item.keyword);
+      savedList.appendChild(li);
+    });
+  };
+}
+
 
