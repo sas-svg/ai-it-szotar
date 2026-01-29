@@ -1,3 +1,35 @@
+let db;
+
+const DB_NAME = "ai_it_szotar";
+const DB_VERSION = 1;
+const STORE_NAME = "terms";
+
+function openDB() {
+  return new Promise((resolve, reject) => {
+    const request = indexedDB.open(DB_NAME, DB_VERSION);
+
+    request.onupgradeneeded = (event) => {
+      db = event.target.result;
+
+      if (!db.objectStoreNames.contains(STORE_NAME)) {
+        const store = db.createObjectStore(STORE_NAME, {
+          keyPath: "keyword"
+        });
+
+        store.createIndex("keyword", "keyword", { unique: true });
+        store.createIndex("savedAt", "savedAt", { unique: false });
+      }
+    };
+
+    request.onsuccess = (event) => {
+      db = event.target.result;
+      resolve(db);
+    };
+
+    request.onerror = () => reject("IndexedDB hiba");
+  });
+}
+
 const searchBtn = document.getElementById("searchBtn");
 const input = document.getElementById("searchInput");
 
@@ -71,3 +103,4 @@ function renderSaved() {
   });
 }
 renderSaved();
+
